@@ -4,7 +4,11 @@ import Card from "../app/components/Card";
 import { useEffect, useState } from "react";
 
 export default function App() {
-  const [records, setRecords] = useState([]);
+  interface Record {
+    typo: string;
+    context: string;
+  }
+  const [records, setRecords] = useState<Record[]>([]);
 
   // Function to load records from localStorage
   const loadRecords = () => {
@@ -13,7 +17,7 @@ export default function App() {
   };
 
   // Function to delete a record by index
-  const deleteRecord = (index) => {
+  const deleteRecord = (index:number) => {
     const updatedRecords = records.filter((_, i) => i !== index);
     setRecords(updatedRecords);
     localStorage.setItem("records", JSON.stringify(updatedRecords));
@@ -31,7 +35,7 @@ export default function App() {
       {/* Pass loadRecords as a prop to Modal */}
       <Modal reloadRecords={loadRecords} />
       <div className="flex flex-wrap gap-4 justify-center">
-        {records.map((record, index) => (
+        {records.map((record, index:number) => (
           <Card
             key={index}
             typo={record.typo}
