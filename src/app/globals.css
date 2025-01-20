@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.toast {
+    background-color: #f91d49 !important; /* Custom background */
+    color: #ffffff !important; /* Custom text color */
+    border-radius: 8px !important; /* Rounded corners */
+    font-family: Arial, sans-serif;
+  }
+  
+  .toast-body {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .Toastify__progress-bar {
+    background-color: #000000 !important; /* Custom progress bar color */
+  }
