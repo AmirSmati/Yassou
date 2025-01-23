@@ -2,25 +2,44 @@
 import Modal from "../app/components/Modal";
 import Card from "../app/components/Card";
 import { useEffect, useState } from "react";
+import supabase from "../lib/supabaseClient";
 
 export default function App() {
   interface Record {
+    id:number;
     typo: string;
     context: string;
   }
   const [records, setRecords] = useState<Record[]>([]);
 
-  // Function to load records from localStorage
-  const loadRecords = () => {
-    const storedRecords = JSON.parse(localStorage.getItem("records") || "[]");
-    setRecords(storedRecords);
+   // Function to load records from the database
+   const loadRecords = async () => {
+    try {
+      const { data, error } = await supabase.from("blogs").select("*");
+      if (error) throw error;
+
+      setRecords(data || []);
+    } catch (error) {
+      if (error instanceof Error){
+        console.error("Error loading records:", error.message);
+      }
+      
+    }
   };
 
   // Function to delete a record by index
-  const deleteRecord = (index:number) => {
-    const updatedRecords = records.filter((_, i) => i !== index);
-    setRecords(updatedRecords);
-    localStorage.setItem("records", JSON.stringify(updatedRecords));
+  const deleteRecord = async (id: number) => {
+    try {
+      const { error } = await supabase.from("blogs").delete().eq("id", id);
+      if (error) throw error;
+
+      // Refresh records after deletion
+      loadRecords();
+    } catch (error) {
+      if(error instanceof Error){
+        console.error("Error deleting record:", error.message);
+      }
+    }
   };
 
   // Load records when the component mounts
@@ -37,10 +56,11 @@ export default function App() {
       <div className="flex flex-wrap gap-4 justify-center">
         {records.map((record, index:number) => (
           <Card
+            id={record.id}
             key={index}
             typo={record.typo}
             context={record.context}
-            onDelete={() => deleteRecord(index)} // Pass deleteRecord as a prop
+            onDelete={() => deleteRecord(record.id)} // Pass deleteRecord as a prop
           />
         ))}
       </div>
