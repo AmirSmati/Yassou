@@ -8,7 +8,7 @@ export default function App() {
   interface Record {
     id:number;
     typo: string;
-    context: string;
+    content: string;
   }
   const [records, setRecords] = useState<Record[]>([]);
 
@@ -59,7 +59,7 @@ export default function App() {
             id={record.id}
             key={index}
             typo={record.typo}
-            context={record.context}
+            content={record.content}
             onDelete={() => deleteRecord(record.id)} // Pass deleteRecord as a prop
           />
         ))}
